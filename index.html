@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Calculadora Multijuros Compostos JHD Trader’$ School</title>
+<style>
+:root { --bg: #0f172a; --card: #1e293b; --input: #0f172a; --text: #f8fafc; --muted: #94a3b8; --accent: #3b82f6; --win: #10b981; --loss: #ef4444; --border: #334155; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background: var(--bg); color: var(--text); padding: 16px; padding-bottom: 40px; }
+.container { max-width: 600px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 20px; }
+header h1 { font-size: 1.3rem; margin-bottom: 4px; }
+header p { font-size: 0.85rem; color: var(--muted); }
+.card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.input-group { display: flex; flex-direction: column; }
+.input-group label { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+.input-group input { background: var(--input); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; width: 100%; outline: none; }
+.input-group input:focus { border-color: var(--accent); }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.summary-box { background: var(--input); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+.summary-box span { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+.summary-box strong { font-size: 1.05rem; }
+.text-win { color: var(--win); }
+.text-loss { color: var(--loss); }
+.text-accent { color: var(--accent); }
+.btn-reset { width: 100%; margin-top: 12px; padding: 10px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
+.btn-reset:active { background: var(--border); }
+.table-header-info { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; text-align: center; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; padding: 10px 6px; color: var(--muted); border-bottom: 1px solid var(--border); font-size: 0.75rem; }
+td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.status-btn { padding: 6px 4px; border-radius: 6px; font-weight: bold; font-size: 0.68rem; cursor: pointer; width: 96px; text-align: center; }
+.status-win { background: rgba(16, 185, 129, 0.2); color: var(--win); border: 1px solid var(--win); }
+.status-loss { background: rgba(239, 68, 68, 0.2); color: var(--loss); border: 1px solid var(--loss); }
+.row-loss td { opacity: 0.85; }
+.status-pend { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; }
+.row-pend td { opacity: 0.8; }
+.text-muted { color: var(--muted); }
+.prever-btn { background: #cbd5e1; color: #0f172a; border: 1px solid #94a3b8; border-radius: 6px; padding: 6px 8px; font-size: 0.72rem; font-weight: bold; cursor: pointer; min-width: 84px; text-align: center; }
+.prever-btn:active { background: #e2e8f0; }
+.saved-badge { font-size: 0.72rem; color: var(--win); text-align: center; margin-top: 8px; opacity: 0.85; }
+.mc-head { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 0.95rem; user-select: none; }
+.mc-head span { color: var(--muted); font-size: 0.8rem; }
+#mc-card { outline: none; }
+#mc-corpo { margin-top: 12px; }
+.mc-display { background: var(--input); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; text-align: right; margin-bottom: 10px; min-height: 76px; display: flex; flex-direction: column; justify-content: flex-end; }
+.mc-expr { color: var(--muted); font-size: 1rem; word-break: break-all; min-height: 1.3em; }
+.mc-res { font-size: 1.5rem; font-weight: bold; min-height: 1.8rem; }
+.mc-prev { color: var(--muted); }
+.mc-err { color: var(--loss); }
+.mc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mc-btn { background: var(--input); border: 1px solid var(--border); color: var(--text); padding: 12px 0; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; touch-action: manipulation; user-select: none; }
+.mc-btn:active { background: var(--border); }
+.mc-op { color: var(--accent); }
+.mc-clr { color: var(--loss); }
+.mc-eq { grid-column: span 4; background: var(--accent); border-color: var(--accent); color: #fff; }
+.mc-eq:active { opacity: 0.85; background: var(--accent); }
+.tag-uso { font-size: 0.72rem; color: var(--muted); opacity: 0.85; margin-top: 3px; }
+.tag-aviso { font-size: 0.6rem; color: var(--muted); opacity: 0.65; margin-top: 2px; margin-bottom: 6px; }
+
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center}
+#gate .card{width:100%;max-width:380px;text-align:center;margin-bottom:0}
+#gate .btn-go{width:100%;margin-top:14px;padding:12px;background:var(--accent);border:1px solid var(--accent);color:#fff;border-radius:8px;font-size:.95rem;font-weight:bold;cursor:pointer}
+#gate .btn-go:disabled{opacity:.5}
+#gate-msg{margin-top:10px;font-size:.8rem;color:var(--loss);min-height:1.1em}
+#aluno-info{margin-top:6px;font-size:.75rem;color:var(--muted)}
+#aluno-info a{color:var(--accent);margin-left:6px;cursor:pointer}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Multijuros JHD">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div id="gate">
+<div class="card">
+<h1 style="font-size:1.3rem;margin-bottom:4px">Calculadora Multijuros Compostos JHD Trader’$ School</h1>
+<p class="tag-uso">Uso exclusivo de mentorados</p>
+<p class="tag-aviso" style="margin-bottom:16px">Proibida a reprodução sem autorização!</p>
+<div class="input-group"><label for="senha-acesso">Sua senha de acesso</label>
+<input type="password" id="senha-acesso" autocomplete="current-password" autocapitalize="off" autocorrect="off"></div>
+<button class="btn-go" id="btn-entrar">Entrar</button>
+<div id="gate-msg"></div>
+</div>
+</div>
+<div class="container" id="app" style="display:none">
+<header>
+<h1>Calculadora Multijuros Compostos JHD Trader’$ School</h1>
+<p class="tag-uso">Uso exclusivo de mentorados</p>
+<p class="tag-aviso">Proibida a reprodução sem autorização!</p>
+<p>Juros Compostos & Gerenciamento</p>
+<p id="aluno-info"></p>
+</header>
+<div class="card">
+<div class="grid-inputs">
+<div class="input-group">
+<label for="banca">Banca Inicial (R$)</label>
+<input type="number" id="banca" value="4000" step="10" oninput="salvarERecalcular()">
+</div>
+<div class="input-group">
+<label for="dias">Total de Dias</label>
+<input type="number" id="dias" value="30" min="1" max="365" oninput="gerarDias()">
+</div>
+<div class="input-group">
+<label for="meta">Meta Diária (%)</label>
+<input type="number" id="meta" value="3" step="0.1" oninput="salvarERecalcular()">
+</div>
+<div class="input-group">
+<label for="stop">Stop Loss Diário (%)</label>
+<input type="number" id="stop" value="3" step="0.1" oninput="salvarERecalcular()">
+</div>
+<div class="input-group" style="grid-column: span 2;">
+<label for="payout">Payout da Corretora (%)</label>
+<input type="number" id="payout" value="92" step="1" min="1" max="100" oninput="salvarERecalcular()">
+</div>
+</div>
+<div class="saved-badge" id="saved-msg">Dados salvos automaticamente no aparelho</div>
+<div class="saved-badge" id="versao" style="opacity:.6">Versão 5 · com mini calculadora</div>
+</div>
+<div class="card" id="mc-card" tabindex="0">
+<div class="mc-head" onclick="mcToggle()"><strong>Mini Calculadora</strong><span id="mc-seta">toque para abrir ▼</span></div>
+<div id="mc-corpo" style="display:none">
+<div class="mc-display"><div id="mc-expr" class="mc-expr">0</div><div id="mc-res" class="mc-res"></div></div>
+<div class="mc-grid">
+<button class="mc-btn mc-clr" onclick="mcLimpar()">C</button>
+<button class="mc-btn mc-op" onclick="mcApagar()">⌫</button>
+<button class="mc-btn mc-op" onclick="mcPress('%')">%</button>
+<button class="mc-btn mc-op" onclick="mcPress('÷')">÷</button>
+<button class="mc-btn " onclick="mcPress('7')">7</button>
+<button class="mc-btn " onclick="mcPress('8')">8</button>
+<button class="mc-btn " onclick="mcPress('9')">9</button>
+<button class="mc-btn mc-op" onclick="mcPress('×')">×</button>
+<button class="mc-btn " onclick="mcPress('4')">4</button>
+<button class="mc-btn " onclick="mcPress('5')">5</button>
+<button class="mc-btn " onclick="mcPress('6')">6</button>
+<button class="mc-btn mc-op" onclick="mcPress('−')">−</button>
+<button class="mc-btn " onclick="mcPress('1')">1</button>
+<button class="mc-btn " onclick="mcPress('2')">2</button>
+<button class="mc-btn " onclick="mcPress('3')">3</button>
+<button class="mc-btn mc-op" onclick="mcPress('+')">+</button>
+<button class="mc-btn mc-op" onclick="mcPress('(')">(</button>
+<button class="mc-btn " onclick="mcPress('0')">0</button>
+<button class="mc-btn " onclick="mcPress(',')">,</button>
+<button class="mc-btn mc-op" onclick="mcPress(')')">)</button>
+<button class="mc-btn mc-eq" onclick="mcIgual()">=</button>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="summary-grid">
+<div class="summary-box" style="grid-column: span 2;">
+<span>Banca Atual (realizada)</span>
+<strong id="res-real" class="text-accent">R$ 0,00</strong>
+<span id="res-real-det" class="text-muted" style="margin: 4px 0 0; font-size: 0.78rem;">Nenhuma operação encerrada ainda</span>
+</div>
+<div class="summary-box">
+<span>Banca Final Projetada</span>
+<strong id="res-banca-final" class="text-accent">R$ 0,00</strong>
+</div>
+<div class="summary-box">
+<span>Lucro / Prejuízo Líquido</span>
+<strong id="res-lucro" class="text-win">R$ 0,00</strong>
+</div>
+<div class="summary-box">
+<span>Crescimento Total</span>
+<strong id="res-percentual">0,00%</strong>
+</div>
+<div class="summary-box">
+<span>Placar (Win / Loss / Aguardando)</span>
+<strong id="res-placar">30W - 0L</strong>
+</div>
+</div>
+<button class="btn-reset" onclick="resetarDias()">Resetar todos os dias para AGUARDANDO</button>
+</div>
+<div class="card">
+<div class="table-header-info">Ao finalizar a operação, toque no botão do dia: <strong>AGUARDANDO → WIN → LOSS</strong>. Em dias aguardando, toque em <strong>PREVER</strong> para ver a banca prevista (projeção como WIN).</div>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Dia</th>
+<th>Entrada (1x)</th>
+<th>Meta / Stop</th>
+<th>Banca Final</th>
+<th style="text-align: right;">Status</th>
+</tr>
+</thead>
+<tbody id="tabela-corpo"></tbody>
+</table>
+</div>
+</div>
+</div>
+<script>
+let statusDias = [];
+let previsto = [];
+const STORAGE_KEY = 'calc_ob_juros_compostos_v1';
+
+function formatarMoeda(v) {
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function salvarDados() {
+    try {
+        const dados = {
+            banca: document.getElementById('banca').value,
+            dias: document.getElementById('dias').value,
+            meta: document.getElementById('meta').value,
+            stop: document.getElementById('stop').value,
+            payout: document.getElementById('payout').value,
+            statusDias: statusDias
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+    } catch (e) {}
+}
+
+function carregarDados() {
+    try {
+        const salvo = localStorage.getItem(STORAGE_KEY);
+        if (salvo) {
+            const dados = JSON.parse(salvo);
+            if (dados.banca !== undefined) document.getElementById('banca').value = dados.banca;
+            if (dados.dias !== undefined) document.getElementById('dias').value = dados.dias;
+            if (dados.meta !== undefined) document.getElementById('meta').value = dados.meta;
+            if (dados.stop !== undefined) document.getElementById('stop').value = dados.stop;
+            if (dados.payout !== undefined) document.getElementById('payout').value = dados.payout;
+            if (Array.isArray(dados.statusDias)) statusDias = dados.statusDias.map(v => v === 'W' || v === 'L' || v === 'P' ? v : (v === false ? 'L' : 'P'));
+        }
+    } catch (e) {}
+}
+
+function gerarDias() {
+    const total = parseInt(document.getElementById('dias').value) || 30;
+    const novo = [];
+    for (let i = 0; i < total; i++) novo.push(statusDias[i] !== undefined ? statusDias[i] : 'P');
+    statusDias = novo;
+    salvarERecalcular();
+}
+
+function alternarStatus(i) {
+    const prox = { P: 'W', W: 'L', L: 'P' };
+    statusDias[i] = prox[statusDias[i]] || 'P';
+    previsto[i] = false;
+    salvarERecalcular();
+}
+
+function alternarPrever(i) {
+    previsto[i] = !previsto[i];
+    recalcularTudo();
+}
+
+function resetarDias() {
+    statusDias = statusDias.map(() => 'P');
+    previsto = [];
+    salvarERecalcular();
+}
+
+function salvarERecalcular() {
+    salvarDados();
+    recalcularTudo();
+}
+
+function recalcularTudo() {
+    const bancaIni = parseFloat(document.getElementById('banca').value) || 0;
+    const metaPct = (parseFloat(document.getElementById('meta').value) || 0) / 100;
+    const stopPct = (parseFloat(document.getElementById('stop').value) || 0) / 100;
+    const payout = (parseFloat(document.getElementById('payout').value) || 92) / 100;
+    const tbody = document.getElementById('tabela-corpo');
+    tbody.innerHTML = '';
+    let banca = bancaIni, real = bancaIni, wins = 0, losses = 0, pend = 0;
+    statusDias.forEach((st, idx) => {
+        const metaVal = banca * metaPct;
+        const stopVal = banca * stopPct;
+        const entrada = payout > 0 ? (metaVal / payout) : 0;
+        const isLoss = st === 'L', isPend = st === 'P';
+        const resDia = isLoss ? -stopVal : metaVal;
+        if (st === 'W') wins++; else if (isLoss) losses++; else pend++;
+        if (st === 'W') real += real * metaPct; else if (isLoss) real = Math.max(0, real - real * stopPct);
+        const bancaFim = Math.max(0, banca + resDia);
+        const tr = document.createElement('tr');
+        if (isLoss) tr.classList.add('row-loss');
+        if (isPend) tr.classList.add('row-pend');
+        tr.innerHTML = `<td><strong>${idx + 1}</strong></td><td>${formatarMoeda(entrada)}</td><td class="${isPend ? 'text-muted' : (isLoss ? 'text-loss' : 'text-win')}">${isLoss ? '' : '+'}${formatarMoeda(resDia)}</td><td>${isPend ? `<button class="prever-btn" onclick="alternarPrever(${idx})">${previsto[idx] ? formatarMoeda(bancaFim) : 'PREVER'}</button>` : `<strong>${formatarMoeda(bancaFim)}</strong>`}</td><td style="text-align: right;"><button class="status-btn ${isPend ? 'status-pend' : (isLoss ? 'status-loss' : 'status-win')}" onclick="alternarStatus(${idx})">${isPend ? 'AGUARDANDO' : (isLoss ? 'LOSS' : 'WIN')}</button></td>`;
+        tbody.appendChild(tr);
+        banca = bancaFim;
+    });
+    const lucro = banca - bancaIni;
+    const pct = bancaIni > 0 ? ((lucro / bancaIni) * 100) : 0;
+    document.getElementById('res-banca-final').textContent = formatarMoeda(banca);
+    const elLucro = document.getElementById('res-lucro');
+    elLucro.textContent = (lucro >= 0 ? '+' : '') + formatarMoeda(lucro);
+    elLucro.className = lucro >= 0 ? 'text-win' : 'text-loss';
+    const elPct = document.getElementById('res-percentual');
+    elPct.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+    elPct.className = pct >= 0 ? 'text-win' : 'text-loss';
+    document.getElementById('res-placar').textContent = `${wins}W - ${losses}L - ${pend} AG`;
+    document.getElementById('res-real').textContent = formatarMoeda(real);
+    const lucroReal = real - bancaIni, pctReal = bancaIni > 0 ? (lucroReal / bancaIni) * 100 : 0;
+    const elDet = document.getElementById('res-real-det');
+    if (wins + losses === 0) { elDet.textContent = 'Nenhuma operação encerrada ainda'; elDet.className = 'text-muted'; }
+    else { const sg = lucroReal >= 0 ? '+' : ''; elDet.textContent = `${sg}${formatarMoeda(lucroReal)} (${sg}${pctReal.toFixed(2)}%)`; elDet.className = lucroReal >= 0 ? 'text-win' : 'text-loss'; }
+}
+
+let mcExpr = '', mcDone = false, mcUlt = '';
+const MC_OPS = ['+', '−', '×', '÷'];
+
+function mcFmt(n) {
+    return n.toLocaleString('pt-BR', { maximumFractionDigits: 8 });
+}
+
+function mcRaw(n) {
+    let t = n.toFixed(8);
+    if (t.indexOf('.') >= 0) t = t.replace(/0+$/, '').replace(/\.$/, '');
+    if (t === '-0') t = '0';
+    return t.replace('-', '−').replace('.', ',');
+}
+
+function mcAvaliar(texto) {
+    const s = texto.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/,/g, '.').replace(/\s/g, '');
+    let i = 0, fatorPct = false, ultimoPct = false;
+    function primario() {
+        if (s[i] === '(') { i++; const v = soma(); if (s[i] !== ')') throw 0; i++; return v; }
+        const m = /^(\d+\.?\d*|\.\d+)/.exec(s.slice(i));
+        if (!m) throw 0;
+        i += m[0].length;
+        return parseFloat(m[0]);
+    }
+    function fator() {
+        if (s[i] === '-') { i++; return -fator(); }
+        if (s[i] === '+') { i++; return fator(); }
+        let v = primario(), teve = false;
+        while (s[i] === '%') { i++; v = v / 100; teve = true; }
+        fatorPct = teve;
+        return v;
+    }
+    function termo() {
+        let v = fator(), n = 0;
+        const teve = fatorPct;
+        while (s[i] === '*' || s[i] === '/') {
+            const o = s[i++]; const d = fator(); n++;
+            v = o === '*' ? v * d : v / d;
+        }
+        ultimoPct = teve && n === 0;
+        return v;
+    }
+    function soma() {
+        let v = termo();
+        while (s[i] === '+' || s[i] === '-') {
+            const o = s[i++]; const d = termo(); const pct = ultimoPct;
+            v = o === '+' ? (pct ? v + v * d : v + d) : (pct ? v - v * d : v - d);
+        }
+        return v;
+    }
+    const r = soma();
+    if (i !== s.length) throw 0;
+    return r;
+}
+
+function mcAtualizar() {
+    document.getElementById('mc-expr').textContent = mcExpr || '0';
+    const elR = document.getElementById('mc-res');
+    let prev = '';
+    if (/[+−×÷%]/.test(mcExpr.slice(1))) {
+        try { const r = mcAvaliar(mcExpr.replace(/[+−×÷]+$/, '')); if (isFinite(r)) prev = mcFmt(r); } catch (e) {}
+    }
+    elR.textContent = prev;
+    elR.className = 'mc-res mc-prev';
+}
+
+function mcPress(c) {
+    const isOp = MC_OPS.indexOf(c) >= 0;
+    if (mcDone) {
+        mcExpr = (isOp || c === '%') ? mcUlt : '';
+        mcDone = false;
+    }
+    const ult = mcExpr.slice(-1);
+    if (c === ',') {
+        const seg = mcExpr.split(/[+−×÷()%]/).pop();
+        if (seg.indexOf(',') >= 0) return;
+        if (seg === '') c = '0,';
+    }
+    if (isOp) {
+        if (!mcExpr || ult === '(') { if (c === '−') { mcExpr += c; mcAtualizar(); } return; }
+        if (MC_OPS.indexOf(ult) >= 0) mcExpr = mcExpr.slice(0, -1);
+    }
+    if (c === '%' && (!mcExpr || MC_OPS.indexOf(ult) >= 0 || ult === '(' || ult === '%')) return;
+    if (c === ')') {
+        const ab = (mcExpr.match(/\(/g) || []).length, fe = (mcExpr.match(/\)/g) || []).length;
+        if (ab <= fe || !/[0-9,%)]$/.test(mcExpr)) return;
+    }
+    if (c === '(' && /[0-9,%)]$/.test(mcExpr)) mcExpr += '×';
+    if (/^[0-9]/.test(c) && ult === ')') mcExpr += '×';
+    mcExpr += c;
+    mcAtualizar();
+}
+
+function mcLimpar() {
+    mcExpr = ''; mcDone = false; mcUlt = '';
+    mcAtualizar();
+}
+
+function mcApagar() {
+    if (mcDone) { mcLimpar(); return; }
+    mcExpr = mcExpr.slice(0, -1);
+    mcAtualizar();
+}
+
+function mcIgual() {
+    let texto = mcExpr.replace(/[+−×÷]+$/, '');
+    if (!texto) return;
+    const ab = (texto.match(/\(/g) || []).length - (texto.match(/\)/g) || []).length;
+    for (let k = 0; k < ab; k++) texto += ')';
+    const elR = document.getElementById('mc-res');
+    try {
+        const r = mcAvaliar(texto);
+        if (!isFinite(r)) throw 0;
+        mcUlt = mcRaw(r);
+        document.getElementById('mc-expr').textContent = texto + ' =';
+        elR.textContent = mcFmt(r);
+        elR.className = 'mc-res';
+    } catch (e) {
+        mcUlt = '';
+        elR.textContent = 'Erro';
+        elR.className = 'mc-res mc-err';
+    }
+    mcDone = true;
+}
+
+function mcToggle() {
+    const corpo = document.getElementById('mc-corpo');
+    const aberto = corpo.style.display !== 'none';
+    corpo.style.display = aberto ? 'none' : '';
+    document.getElementById('mc-seta').textContent = aberto ? 'toque para abrir ▼' : 'fechar ▲';
+}
+
+document.getElementById('mc-card').addEventListener('keydown', function (e) {
+    const k = e.key; let c = null;
+    if (/^[0-9]$/.test(k)) c = k;
+    else if (k === ',' || k === '.') c = ',';
+    else if (k === '+') c = '+';
+    else if (k === '-') c = '−';
+    else if (k === '*' || k === 'x' || k === 'X') c = '×';
+    else if (k === '/') c = '÷';
+    else if (k === '%' || k === '(' || k === ')') c = k;
+    if (c) { mcPress(c); e.preventDefault(); }
+    else if (k === 'Enter' || k === '=') { mcIgual(); e.preventDefault(); }
+    else if (k === 'Backspace') { mcApagar(); e.preventDefault(); }
+    else if (k === 'Escape' || k === 'Delete') { mcLimpar(); e.preventDefault(); }
+});
+
+carregarDados();
+gerarDias();
+</script>
+<script>
+(function(){
+var ALUNOS=[{"n":"JapaTrader","h":"0c8d200a1f9c769381d3299caed9969b066cd25ba5365edca355ad21ba9989c8"},{"n":"JHDTrader","h":"1d2a3e57853b7c09e3e238b056cf71c81211ee6ca2b58b0dee8255d4584770bd"}];
+var SALT='cdbf181e399003ff9196e891916278e9';
+var SK='calc_ob_acesso_v1';
+function sha256hex(str){
+  function rr(v,a){return (v>>>a)|(v<<(32-a));}
+  var K=[],H=[],p=[],c=0,n,i;
+  for(n=2;c<64;n++){var pr=true;for(i=0;i<p.length;i++){if(n%p[i]===0){pr=false;break;}}
+    if(pr){p.push(n);if(c<8)H[c]=(Math.pow(n,.5)*4294967296)|0;K[c++]=(Math.pow(n,1/3)*4294967296)|0;}}
+  var m=unescape(encodeURIComponent(str)),len=m.length*8,w=[],j;
+  m+='\x80';while(m.length%64-56)m+='\x00';
+  for(i=0;i<m.length;i++){j=m.charCodeAt(i);w[i>>2]|=j<<((3-i%4)*8);}
+  w[w.length]=(len/4294967296)|0;w[w.length]=len|0;
+  for(j=0;j<w.length;){
+    var W=w.slice(j,j+=16),old=H.slice(0);H=H.slice(0,8);
+    for(i=0;i<64;i++){
+      var w15=W[i-15],w2=W[i-2],a=H[0],e=H[4];
+      var t1=H[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&H[5])^(~e&H[6]))+K[i]+(W[i]=(i<16)?W[i]:(W[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+W[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10))|0));
+      var t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&H[1])^(a&H[2])^(H[1]&H[2]));
+      H=[(t1+t2)|0].concat(H);H[4]=(H[4]+t1)|0;H.length=8;
+    }
+    for(i=0;i<8;i++)H[i]=(H[i]+old[i])|0;
+  }
+  var out='';for(i=0;i<8;i++)for(j=3;j>=0;j--){var b=(H[i]>>(j*8))&255;out+=(b<16?'0':'')+b.toString(16);}
+  return out;
+}
+function hashSenha(p,salt){var h=sha256hex(salt+':'+p);for(var i=0;i<2000;i++)h=sha256hex(h+salt);return h;}
+var gate=document.getElementById('gate'),app=document.getElementById('app'),
+    msg=document.getElementById('gate-msg'),inp=document.getElementById('senha-acesso'),
+    btn=document.getElementById('btn-entrar'),info=document.getElementById('aluno-info');
+function achar(h){for(var i=0;i<ALUNOS.length;i++)if(ALUNOS[i].h===h)return ALUNOS[i];return null;}
+function liberar(a){
+  gate.style.display='none';app.style.display='';
+  info.textContent='Aluno: '+a.n;
+  var l=document.createElement('a');l.textContent='Sair';
+  l.onclick=function(){location.reload();};
+  info.appendChild(l);
+}
+function tentar(){
+  var v=inp.value.trim();if(!v)return;
+  var h=hashSenha(v,SALT),a=achar(h);
+  if(a){liberar(a);}
+  else{msg.textContent='Senha incorreta.';inp.value='';btn.disabled=true;setTimeout(function(){btn.disabled=false;},2000);}
+}
+btn.onclick=tentar;
+inp.addEventListener('keydown',function(e){if(e.key==='Enter')tentar();});
+if(!ALUNOS.length)msg.textContent='Nenhum acesso configurado.';
+try{localStorage.removeItem(SK);}catch(e){}
+})();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update();}).catch(function(){});});}
+</script>
+</body>
+</html>
