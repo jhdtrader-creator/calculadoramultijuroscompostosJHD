@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f172a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Calculadora Multijuros Compostos JHD Trader’$ School</title>
+<title>GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</title>
 <style>
 :root { --bg: #0f172a; --card: #1e293b; --input: #0f172a; --text: #f8fafc; --muted: #94a3b8; --accent: #3b82f6; --win: #10b981; --loss: #ef4444; --border: #334155; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -63,6 +63,33 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 .mc-eq:active { opacity: 0.85; background: var(--accent); }
 .tag-uso { font-size: 0.72rem; color: var(--muted); opacity: 0.85; margin-top: 3px; }
 .tag-aviso { font-size: 0.6rem; color: var(--muted); opacity: 0.65; margin-top: 2px; margin-bottom: 6px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.perfil-ativo { font-size: 0.72rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.perfil-sujo { color: #f59e0b; }
+.btn-salvos { flex-shrink: 0; background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+.btn-salvos:active { background: var(--border); }
+.pf-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+.pf-sheet { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto; }
+.pf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.pf-x { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 5px 10px; font-size: 0.75rem; cursor: pointer; }
+.pf-btn { border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; font-weight: bold; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text); }
+.pf-pri { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pf-sec { color: var(--muted); }
+.pf-msg { font-size: 0.78rem; min-height: 1.1em; margin-top: 8px; text-align: center; }
+.pf-ok { color: var(--win); }
+.pf-erro { color: var(--loss); }
+.pf-sep { margin: 14px 0 8px; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+.pf-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; background: var(--input); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+.pf-item.pf-atual { border-color: var(--accent); }
+.pf-info { min-width: 0; }
+.pf-nome { font-size: 0.9rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-det { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+.pf-acoes { display: flex; gap: 6px; flex-shrink: 0; }
+.pf-mini { padding: 7px 10px; font-size: 0.75rem; }
+.pf-del { color: var(--loss); border-color: var(--loss); }
+.pf-vazio { font-size: 0.78rem; color: var(--muted); text-align: center; padding: 8px; }
+.pf-nota { font-size: 0.68rem; color: var(--muted); margin-top: 12px; text-align: center; line-height: 1.4; }
+.tag-escola { font-size: 0.78rem; color: var(--muted); margin-top: 4px; overflow-wrap: anywhere; }
 
 #gate{min-height:100vh;display:flex;align-items:center;justify-content:center}
 #gate .card{width:100%;max-width:380px;text-align:center;margin-bottom:0}
@@ -75,13 +102,14 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="apple-mobile-web-app-title" content="Multijuros JHD">
+<meta name="apple-mobile-web-app-title" content="Gestor JHD">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 <div id="gate">
 <div class="card">
-<h1 style="font-size:1.3rem;margin-bottom:4px">Calculadora Multijuros Compostos JHD Trader’$ School</h1>
+<h1 style="font-size:1.3rem;margin-bottom:4px">GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</h1>
+<p class="tag-escola">JHD Trader’$ School | jhdtraderschool@gmail.com</p>
 <p class="tag-uso">Uso exclusivo de mentorados</p>
 <p class="tag-aviso" style="margin-bottom:16px">Proibida a reprodução sem autorização!</p>
 <div class="input-group"><label for="senha-acesso">Sua senha de acesso</label>
@@ -91,11 +119,31 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 </div>
 </div>
 <div class="container" id="app" style="display:none">
+<div class="topbar"><span id="perfil-ativo" class="perfil-ativo">Sem nome</span><button class="btn-salvos" onclick="abrirSalvos()">Salvar / Abrir</button></div>
+<div id="pf-overlay" class="pf-overlay" onclick="if (event.target === this) fecharSalvos()">
+<div class="pf-sheet">
+<div class="pf-head"><strong>Minhas calculadoras</strong><button class="pf-x" onclick="fecharSalvos()">Fechar</button></div>
+<div class="input-group"><label for="pf-nome">Salvar a calculadora atual com o nome:</label>
+<input type="text" id="pf-nome" maxlength="40" placeholder="Ex.: Corretora X - Conta Real" autocomplete="off"></div>
+<button class="pf-btn pf-pri" style="width:100%;margin-top:10px" onclick="salvarComo()">Salvar</button>
+<div id="pf-msg" class="pf-msg"></div>
+<div class="pf-sep">Salvas neste aparelho</div>
+<div id="pf-lista"></div>
+<button class="pf-btn pf-sec" style="width:100%;margin-top:12px" onclick="novaEmBranco()">Nova calculadora em branco</button>
+<div class="pf-sep">Backup (guardar ou levar para outro aparelho)</div>
+<div style="display:flex;gap:8px">
+<button class="pf-btn pf-sec" style="flex:1" onclick="exportarBackup()">Exportar backup</button>
+<button class="pf-btn pf-sec" style="flex:1" onclick="document.getElementById('pf-arquivo').click()">Importar backup</button>
+</div>
+<input type="file" id="pf-arquivo" accept=".json,application/json" style="display:none" onchange="importarBackup(this.files[0]); this.value=''">
+<div class="pf-nota">O trabalho atual também é guardado automaticamente como rascunho. As calculadoras salvas ficam neste aparelho: use o backup para guardá-las em segurança ou levá-las para outro aparelho.</div>
+</div>
+</div>
 <header>
-<h1>Calculadora Multijuros Compostos JHD Trader’$ School</h1>
+<h1>GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</h1>
+<p class="tag-escola">JHD Trader’$ School | jhdtraderschool@gmail.com</p>
 <p class="tag-uso">Uso exclusivo de mentorados</p>
 <p class="tag-aviso">Proibida a reprodução sem autorização!</p>
-<p>Juros Compostos & Gerenciamento</p>
 <p id="aluno-info"></p>
 </header>
 <div class="card">
@@ -122,7 +170,7 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 </div>
 </div>
 <div class="saved-badge" id="saved-msg">Dados salvos automaticamente no aparelho</div>
-<div class="saved-badge" id="versao" style="opacity:.6">Versão 5 · com mini calculadora</div>
+<div class="saved-badge" id="versao" style="opacity:.6">Versão 8 · novo nome</div>
 </div>
 <div class="card" id="mc-card" tabindex="0">
 <div class="mc-head" onclick="mcToggle()"><strong>Mini Calculadora</strong><span id="mc-seta">toque para abrir ▼</span></div>
@@ -214,7 +262,8 @@ function salvarDados() {
             meta: document.getElementById('meta').value,
             stop: document.getElementById('stop').value,
             payout: document.getElementById('payout').value,
-            statusDias: statusDias
+            statusDias: statusDias,
+            perfil: perfilAtivo
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
     } catch (e) {}
@@ -231,6 +280,7 @@ function carregarDados() {
             if (dados.stop !== undefined) document.getElementById('stop').value = dados.stop;
             if (dados.payout !== undefined) document.getElementById('payout').value = dados.payout;
             if (Array.isArray(dados.statusDias)) statusDias = dados.statusDias.map(v => v === 'W' || v === 'L' || v === 'P' ? v : (v === false ? 'L' : 'P'));
+            if (typeof dados.perfil === 'string') perfilAtivo = dados.perfil;
         }
     } catch (e) {}
 }
@@ -300,6 +350,7 @@ function recalcularTudo() {
     elPct.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
     elPct.className = pct >= 0 ? 'text-win' : 'text-loss';
     document.getElementById('res-placar').textContent = `${wins}W - ${losses}L - ${pend} AG`;
+    atualizarPerfilUI();
     document.getElementById('res-real').textContent = formatarMoeda(real);
     const lucroReal = real - bancaIni, pctReal = bancaIni > 0 ? (lucroReal / bancaIni) * 100 : 0;
     const elDet = document.getElementById('res-real-det');
@@ -454,13 +505,265 @@ document.getElementById('mc-card').addEventListener('keydown', function (e) {
     else if (k === 'Escape' || k === 'Delete') { mcLimpar(); e.preventDefault(); }
 });
 
+const PERFIS_KEY = 'calc_ob_perfis_v1';
+let perfilAtivo = null;
+const PADRAO = { banca: '4000', dias: '30', meta: '3', stop: '3', payout: '92' };
+
+function lerPerfis() {
+    try { return JSON.parse(localStorage.getItem(PERFIS_KEY)) || {}; } catch (e) { return {}; }
+}
+
+function gravarPerfis(p) {
+    try { localStorage.setItem(PERFIS_KEY, JSON.stringify(p)); return true; } catch (e) { return false; }
+}
+
+function estadoAtual() {
+    return {
+        banca: document.getElementById('banca').value,
+        dias: document.getElementById('dias').value,
+        meta: document.getElementById('meta').value,
+        stop: document.getElementById('stop').value,
+        payout: document.getElementById('payout').value,
+        statusDias: statusDias.slice()
+    };
+}
+
+function temAlteracoes() {
+    const atual = JSON.stringify(estadoAtual());
+    const p = lerPerfis();
+    if (perfilAtivo && p[perfilAtivo]) return JSON.stringify(p[perfilAtivo].estado) !== atual;
+    const base = Object.assign({}, PADRAO, { statusDias: statusDias.map(() => 'P') });
+    return JSON.stringify(base) !== atual;
+}
+
+function atualizarPerfilUI() {
+    const el = document.getElementById('perfil-ativo');
+    const sujo = temAlteracoes();
+    el.textContent = (perfilAtivo ? perfilAtivo : 'Sem nome') + (sujo ? ' • não salva' : '');
+    el.className = 'perfil-ativo' + (sujo ? ' perfil-sujo' : '');
+}
+
+function aplicarEstado(e) {
+    ['banca', 'dias', 'meta', 'stop', 'payout'].forEach(k => { document.getElementById(k).value = e[k]; });
+    statusDias = (e.statusDias || []).map(v => (v === 'W' || v === 'L' || v === 'P') ? v : 'P');
+    previsto = [];
+    gerarDias();
+}
+
+function pfMensagem(texto, ok) {
+    const m = document.getElementById('pf-msg');
+    m.textContent = texto;
+    m.className = 'pf-msg ' + (ok ? 'pf-ok' : 'pf-erro');
+}
+
+function renderLista() {
+    const p = lerPerfis();
+    const lista = document.getElementById('pf-lista');
+    lista.textContent = '';
+    const nomes = Object.keys(p).sort((a, b) => (p[b].salvoEm || '').localeCompare(p[a].salvoEm || ''));
+    if (!nomes.length) {
+        const v = document.createElement('div');
+        v.className = 'pf-vazio';
+        v.textContent = 'Nenhuma calculadora salva ainda.';
+        lista.appendChild(v);
+        return;
+    }
+    nomes.forEach(nome => {
+        const e = p[nome].estado || {};
+        const item = document.createElement('div');
+        item.className = 'pf-item' + (nome === perfilAtivo ? ' pf-atual' : '');
+        const info = document.createElement('div');
+        info.className = 'pf-info';
+        const n = document.createElement('div');
+        n.className = 'pf-nome';
+        n.textContent = nome;
+        const d = document.createElement('div');
+        d.className = 'pf-det';
+        let quando = '';
+        try { quando = new Date(p[nome].salvoEm).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); } catch (x) {}
+        d.textContent = (e.dias || '?') + ' dias · banca inicial ' + formatarMoeda(parseFloat(e.banca) || 0) + (quando ? ' · salva em ' + quando : '');
+        info.appendChild(n);
+        info.appendChild(d);
+        const ac = document.createElement('div');
+        ac.className = 'pf-acoes';
+        const bA = document.createElement('button');
+        bA.className = 'pf-btn pf-mini pf-pri';
+        bA.textContent = 'Abrir';
+        bA.onclick = function () { abrirPerfil(nome); };
+        const bE = document.createElement('button');
+        bE.className = 'pf-btn pf-mini pf-del';
+        bE.textContent = 'Excluir';
+        bE.onclick = function () { excluirPerfil(nome); };
+        ac.appendChild(bA);
+        ac.appendChild(bE);
+        item.appendChild(info);
+        item.appendChild(ac);
+        lista.appendChild(item);
+    });
+}
+
+function abrirSalvos() {
+    document.getElementById('pf-nome').value = perfilAtivo || '';
+    pfMensagem('', true);
+    renderLista();
+    document.getElementById('pf-overlay').style.display = 'flex';
+}
+
+function fecharSalvos() {
+    document.getElementById('pf-overlay').style.display = 'none';
+}
+
+function salvarComo() {
+    const nome = document.getElementById('pf-nome').value.trim().slice(0, 40);
+    if (!nome) { pfMensagem('Digite um nome para salvar.', false); return; }
+    if (nome === '__proto__') { pfMensagem('Escolha outro nome.', false); return; }
+    const p = lerPerfis();
+    if (existe(p, nome) && nome !== perfilAtivo && !confirm('Já existe uma calculadora chamada "' + nome + '". Deseja substituí-la?')) return;
+    p[nome] = { estado: estadoAtual(), salvoEm: new Date().toISOString() };
+    if (!gravarPerfis(p)) { pfMensagem('Não foi possível salvar neste aparelho.', false); return; }
+    perfilAtivo = nome;
+    salvarERecalcular();
+    renderLista();
+    pfMensagem('Salva como "' + nome + '"!', true);
+}
+
+function abrirPerfil(nome) {
+    const p = lerPerfis();
+    if (!p[nome]) return;
+    if (nome !== perfilAtivo || temAlteracoes()) {
+        if (temAlteracoes() && !confirm('Há alterações não salvas na calculadora atual. Abrir "' + nome + '" mesmo assim?')) return;
+    }
+    perfilAtivo = nome;
+    aplicarEstado(p[nome].estado);
+    fecharSalvos();
+}
+
+function excluirPerfil(nome) {
+    if (!confirm('Excluir a calculadora salva "' + nome + '"? Isso não pode ser desfeito.')) return;
+    const p = lerPerfis();
+    delete p[nome];
+    gravarPerfis(p);
+    if (perfilAtivo === nome) perfilAtivo = null;
+    salvarERecalcular();
+    renderLista();
+    pfMensagem('Calculadora excluída.', true);
+}
+
+function novaEmBranco() {
+    if (temAlteracoes() && !confirm('Há alterações não salvas na calculadora atual. Começar uma nova em branco mesmo assim?')) return;
+    perfilAtivo = null;
+    aplicarEstado(Object.assign({}, PADRAO, { statusDias: [] }));
+    fecharSalvos();
+}
+
+function existe(p, n) { return Object.prototype.hasOwnProperty.call(p, n); }
+
+function estadoValido(e) {
+    if (!e || typeof e !== 'object') return null;
+    const o = {};
+    const campos = ['banca', 'dias', 'meta', 'stop', 'payout'];
+    for (let i = 0; i < campos.length; i++) {
+        const v = String(e[campos[i]] === undefined ? '' : e[campos[i]]);
+        if (v.length > 20 || isNaN(Number(v))) return null;
+        o[campos[i]] = v;
+    }
+    if (Number(o.dias) > 365 || Number(o.dias) < 0) return null;
+    if (!Array.isArray(e.statusDias) || e.statusDias.length > 365) return null;
+    o.statusDias = e.statusDias.map(function (x) { return (x === 'W' || x === 'L') ? x : 'P'; });
+    return o;
+}
+
+async function exportarBackup() {
+    const p = lerPerfis();
+    const total = Object.keys(p).length;
+    if (!total) { pfMensagem('Não há calculadoras salvas para exportar. Salve alguma primeiro.', false); return; }
+    if (temAlteracoes() && !confirm('A calculadora atual tem alterações não salvas, que NÃO entram no backup. Exportar mesmo assim?')) return;
+    const conteudo = JSON.stringify({ tipo: 'calculadora-jhd-backup', versao: 1, exportadoEm: new Date().toISOString(), perfis: p }, null, 2);
+    const h = new Date();
+    const dataStr = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0');
+    const nomeArq = 'backup-calculadora-jhd-' + dataStr + '.json';
+    const blob = new Blob([conteudo], { type: 'application/json' });
+    try {
+        const arq = new File([blob], nomeArq, { type: 'application/json' });
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [arq] })) {
+            await navigator.share({ files: [arq], title: 'Backup da calculadora' });
+            pfMensagem('Backup pronto: ' + total + ' calculadora(s).', true);
+            return;
+        }
+    } catch (e) {
+        if (e && e.name === 'AbortError') return;
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = nomeArq;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    pfMensagem('Backup exportado: ' + total + ' calculadora(s).', true);
+}
+
+function importarBackup(arquivo) {
+    if (!arquivo) return;
+    const invalido = 'Arquivo inválido. Escolha um backup exportado por esta calculadora.';
+    const leitor = new FileReader();
+    leitor.onerror = function () { pfMensagem(invalido, false); };
+    leitor.onload = function () {
+        let dados;
+        try { dados = JSON.parse(leitor.result); } catch (e) { pfMensagem(invalido, false); return; }
+        if (!dados || dados.tipo !== 'calculadora-jhd-backup' || !dados.perfis || typeof dados.perfis !== 'object') { pfMensagem(invalido, false); return; }
+        const novos = {};
+        let ignoradas = 0;
+        Object.keys(dados.perfis).slice(0, 200).forEach(function (n) {
+            const nome = String(n).trim().slice(0, 40);
+            const item = dados.perfis[n];
+            const est = estadoValido(item && item.estado);
+            if (!nome || nome === '__proto__' || !est) { ignoradas++; return; }
+            let quando = item.salvoEm;
+            if (typeof quando !== 'string' || isNaN(new Date(quando).getTime())) quando = new Date().toISOString();
+            novos[nome] = { estado: est, salvoEm: quando };
+        });
+        const nomes = Object.keys(novos);
+        if (!nomes.length) { pfMensagem('Nenhuma calculadora válida encontrada neste arquivo.', false); return; }
+        const p = lerPerfis();
+        const conflitos = nomes.filter(function (n) { return existe(p, n); });
+        let substituir = false;
+        if (conflitos.length) {
+            substituir = confirm(conflitos.length + ' calculadora(s) do backup têm o mesmo nome de uma já salva neste aparelho.\n\nOK = substituir pelas do backup\nCancelar = manter as atuais (as demais serão importadas)');
+        }
+        let novas = 0, subst = 0, mantidas = 0;
+        nomes.forEach(function (n) {
+            if (existe(p, n)) {
+                if (substituir) { p[n] = novos[n]; subst++; } else { mantidas++; }
+            } else { p[n] = novos[n]; novas++; }
+        });
+        if (!gravarPerfis(p)) { pfMensagem('Não foi possível salvar neste aparelho.', false); return; }
+        renderLista();
+        atualizarPerfilUI();
+        let t = 'Backup importado: ' + novas + ' nova(s)';
+        if (subst) t += ', ' + subst + ' substituída(s)';
+        if (mantidas) t += ', ' + mantidas + ' mantida(s) sem alteração';
+        if (ignoradas) t += ', ' + ignoradas + ' ignorada(s)';
+        pfMensagem(t + '.', true);
+    };
+    leitor.readAsText(arquivo);
+}
+
+document.getElementById('pf-nome').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); salvarComo(); }
+});
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('pf-overlay').style.display === 'flex') fecharSalvos();
+});
+
 carregarDados();
+if (perfilAtivo && !lerPerfis()[perfilAtivo]) perfilAtivo = null;
 gerarDias();
 </script>
 <script>
 (function(){
-var ALUNOS=[{"n":"JapaTrader","h":"0c8d200a1f9c769381d3299caed9969b066cd25ba5365edca355ad21ba9989c8"},{"n":"JHDTrader","h":"1d2a3e57853b7c09e3e238b056cf71c81211ee6ca2b58b0dee8255d4584770bd"}];
-var SALT='cdbf181e399003ff9196e891916278e9';
+var ALUNOS=[{"n":"JapaTrader","h":"269f7a4cd7668879c3f83e5a16386177127a766cf707115e117debccbd568b79"},{"n":"JHDTrader","h":"62ed730edebd255f88a49278d59ef3be4d5c67059456792c09544bb0d5ce48f5"}];
+var SALT='2ca6f7f88775e0637b79f4dd7319e1be';
 var SK='calc_ob_acesso_v1';
 function sha256hex(str){
   function rr(v,a){return (v>>>a)|(v<<(32-a));}

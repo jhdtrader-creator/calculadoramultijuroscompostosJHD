@@ -1,7 +1,7 @@
 {
-  "name": "Calculadora Multijuros Compostos JHD Trader\u2019$ School",
-  "short_name": "Multijuros JHD",
-  "description": "Juros Compostos & Gerenciamento",
+  "name": "GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS",
+  "short_name": "Gestor JHD",
+  "description": "JHD Trader\u2019$ School",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
