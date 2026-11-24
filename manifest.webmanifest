@@ -1,7 +1,7 @@
 {
-  "name": "GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS",
+  "name": "GESTOR AUTOMATIZADO JHD DE MULTIJUROS COMPOSTOS",
   "short_name": "Gestor JHD",
-  "description": "JHD Trader\u2019$ School",
+  "description": "Desenvolvido por: JHD Trader\u2019$ School",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

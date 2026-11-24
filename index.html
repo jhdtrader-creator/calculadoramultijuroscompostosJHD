@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f172a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</title>
+<title>GESTOR AUTOMATIZADO JHD DE MULTIJUROS COMPOSTOS</title>
 <style>
 :root { --bg: #0f172a; --card: #1e293b; --input: #0f172a; --text: #f8fafc; --muted: #94a3b8; --accent: #3b82f6; --win: #10b981; --loss: #ef4444; --border: #334155; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -108,8 +108,8 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <body>
 <div id="gate">
 <div class="card">
-<h1 style="font-size:1.3rem;margin-bottom:4px">GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</h1>
-<p class="tag-escola">JHD Trader’$ School | jhdtraderschool@gmail.com</p>
+<h1 style="font-size:1.3rem;margin-bottom:4px">GESTOR AUTOMATIZADO JHD<br>DE MULTIJUROS COMPOSTOS</h1>
+<p class="tag-escola">Desenvolvido por: JHD Trader’$ School<br>jhdtraderschool@gmail.com</p>
 <p class="tag-uso">Uso exclusivo de mentorados</p>
 <p class="tag-aviso" style="margin-bottom:16px">Proibida a reprodução sem autorização!</p>
 <div class="input-group"><label for="senha-acesso">Sua senha de acesso</label>
@@ -140,8 +140,8 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 </div>
 </div>
 <header>
-<h1>GESTOR AUTOMATIZADO DE MULTIJUROS COMPOSTOS</h1>
-<p class="tag-escola">JHD Trader’$ School | jhdtraderschool@gmail.com</p>
+<h1>GESTOR AUTOMATIZADO JHD<br>DE MULTIJUROS COMPOSTOS</h1>
+<p class="tag-escola">Desenvolvido por: JHD Trader’$ School<br>jhdtraderschool@gmail.com</p>
 <p class="tag-uso">Uso exclusivo de mentorados</p>
 <p class="tag-aviso">Proibida a reprodução sem autorização!</p>
 <p id="aluno-info"></p>
@@ -149,7 +149,7 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <div class="card">
 <div class="grid-inputs">
 <div class="input-group">
-<label for="banca">Banca Inicial (R$)</label>
+<label for="banca">Conta Inicial (R$)</label>
 <input type="number" id="banca" value="4000" step="10" oninput="salvarERecalcular()">
 </div>
 <div class="input-group">
@@ -170,7 +170,7 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 </div>
 </div>
 <div class="saved-badge" id="saved-msg">Dados salvos automaticamente no aparelho</div>
-<div class="saved-badge" id="versao" style="opacity:.6">Versão 8 · novo nome</div>
+<div class="saved-badge" id="versao" style="opacity:.6">Versão 9</div>
 </div>
 <div class="card" id="mc-card" tabindex="0">
 <div class="mc-head" onclick="mcToggle()"><strong>Mini Calculadora</strong><span id="mc-seta">toque para abrir ▼</span></div>
@@ -204,12 +204,12 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <div class="card">
 <div class="summary-grid">
 <div class="summary-box" style="grid-column: span 2;">
-<span>Banca Atual (realizada)</span>
+<span>Conta Atual (realizada)</span>
 <strong id="res-real" class="text-accent">R$ 0,00</strong>
 <span id="res-real-det" class="text-muted" style="margin: 4px 0 0; font-size: 0.78rem;">Nenhuma operação encerrada ainda</span>
 </div>
 <div class="summary-box">
-<span>Banca Final Projetada</span>
+<span>Conta Final Projetada</span>
 <strong id="res-banca-final" class="text-accent">R$ 0,00</strong>
 </div>
 <div class="summary-box">
@@ -228,7 +228,7 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <button class="btn-reset" onclick="resetarDias()">Resetar todos os dias para AGUARDANDO</button>
 </div>
 <div class="card">
-<div class="table-header-info">Ao finalizar a operação, toque no botão do dia: <strong>AGUARDANDO → WIN → LOSS</strong>. Em dias aguardando, toque em <strong>PREVER</strong> para ver a banca prevista (projeção como WIN).</div>
+<div class="table-header-info">Ao finalizar a operação, toque no botão do dia: <strong>AGUARDANDO → WIN → LOSS</strong>. Em dias aguardando, toque em <strong>PREVER</strong> para ver a conta prevista (projeção como WIN).</div>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -236,7 +236,7 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: 
 <th>Dia</th>
 <th>Entrada (1x)</th>
 <th>Meta / Stop</th>
-<th>Banca Final</th>
+<th>Conta Final</th>
 <th style="text-align: right;">Status</th>
 </tr>
 </thead>
@@ -581,7 +581,7 @@ function renderLista() {
         d.className = 'pf-det';
         let quando = '';
         try { quando = new Date(p[nome].salvoEm).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); } catch (x) {}
-        d.textContent = (e.dias || '?') + ' dias · banca inicial ' + formatarMoeda(parseFloat(e.banca) || 0) + (quando ? ' · salva em ' + quando : '');
+        d.textContent = (e.dias || '?') + ' dias · conta inicial ' + formatarMoeda(parseFloat(e.banca) || 0) + (quando ? ' · salva em ' + quando : '');
         info.appendChild(n);
         info.appendChild(d);
         const ac = document.createElement('div');
@@ -678,15 +678,15 @@ async function exportarBackup() {
     const total = Object.keys(p).length;
     if (!total) { pfMensagem('Não há calculadoras salvas para exportar. Salve alguma primeiro.', false); return; }
     if (temAlteracoes() && !confirm('A calculadora atual tem alterações não salvas, que NÃO entram no backup. Exportar mesmo assim?')) return;
-    const conteudo = JSON.stringify({ tipo: 'calculadora-jhd-backup', versao: 1, exportadoEm: new Date().toISOString(), perfis: p }, null, 2);
+    const conteudo = JSON.stringify({ tipo: 'gestorautomatizadojhd-backup', versao: 1, exportadoEm: new Date().toISOString(), perfis: p }, null, 2);
     const h = new Date();
     const dataStr = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0');
-    const nomeArq = 'backup-calculadora-jhd-' + dataStr + '.json';
+    const nomeArq = 'backup-gestorautomatizadojhd-' + dataStr + '.json';
     const blob = new Blob([conteudo], { type: 'application/json' });
     try {
         const arq = new File([blob], nomeArq, { type: 'application/json' });
         if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [arq] })) {
-            await navigator.share({ files: [arq], title: 'Backup da calculadora' });
+            await navigator.share({ files: [arq], title: 'Backup do gestor' });
             pfMensagem('Backup pronto: ' + total + ' calculadora(s).', true);
             return;
         }
@@ -711,7 +711,7 @@ function importarBackup(arquivo) {
     leitor.onload = function () {
         let dados;
         try { dados = JSON.parse(leitor.result); } catch (e) { pfMensagem(invalido, false); return; }
-        if (!dados || dados.tipo !== 'calculadora-jhd-backup' || !dados.perfis || typeof dados.perfis !== 'object') { pfMensagem(invalido, false); return; }
+        if (!dados || (dados.tipo !== 'gestorautomatizadojhd-backup' && dados.tipo !== 'calculadora-jhd-backup') || !dados.perfis || typeof dados.perfis !== 'object') { pfMensagem(invalido, false); return; }
         const novos = {};
         let ignoradas = 0;
         Object.keys(dados.perfis).slice(0, 200).forEach(function (n) {
@@ -762,8 +762,8 @@ gerarDias();
 </script>
 <script>
 (function(){
-var ALUNOS=[{"n":"JapaTrader","h":"269f7a4cd7668879c3f83e5a16386177127a766cf707115e117debccbd568b79"},{"n":"JHDTrader","h":"62ed730edebd255f88a49278d59ef3be4d5c67059456792c09544bb0d5ce48f5"}];
-var SALT='2ca6f7f88775e0637b79f4dd7319e1be';
+var ALUNOS=[{"n":"JapaTrader","h":"e2c307521413fc9ecdae1dd9fb2ca6b274df9cbfe409d1d591eea2b8f28ca906"},{"n":"JHDTrader","h":"3f96ecf7036bd1ba0ddeca0b8802dee6e8590befe8870046740e118ec5c0e21b"}];
+var SALT='0b8388fcd6db329a9e340ace8bac4640';
 var SK='calc_ob_acesso_v1';
 function sha256hex(str){
   function rr(v,a){return (v>>>a)|(v<<(32-a));}
